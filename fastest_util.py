@@ -4,7 +4,8 @@ from time import sleep
 import matplotlib.pyplot as plt
 import fastest_lap
 import json
-
+import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET
 
 
 def run_optimal_laptime(track_name, track_path, vehicle_path, print_level = 5):
@@ -62,4 +63,52 @@ def run_circuit_preproccessor(right_kml, left_kml, output_name, num_of_elemments
         print("Complete!\a")
 
     input("Press enter to continue...")
+
+# This function is made by gemini
+def xml_scale(input_file, output_file, sf):
+    tree = ET.parse(input_file)
+    root = tree.getroot()
+
+    # 1. Scale the Track Length in Header
+    tl = root.find('.//track_length')
+    if tl is not None:
+        tl.text = str(float(tl.text) / sf)
+
+    # 2. Iterate through EVERY single tag in the XML
+    for elem in root.iter():
+        # Case A: It's an array (like x, y, arclength, or a width array)
+        if elem.text and ',' in elem.text:
+            try:
+                vals = [float(v.strip()) for v in elem.text.split(',')]
+                
+                if elem.tag == 'curvature':
+                    # Curvature must increase to tighten the physics
+                    new_vals = [str(v * sf) for v in vals]
+                elif any(x in elem.tag.lower() for x in ['lat', 'lon', 'origin', 'earth']):
+                    # Protect GPS origin data
+                    continue
+                else:
+                    # Scale everything else down (x, y, arclength, widths)
+                    new_vals = [str(v / sf) for v in vals]
+   
+                elem.text = ", ".join(new_vals)
+                
+            except ValueError:
+                continue
+
+        # Case B: It's a single number (This is likely where your width is hidden!)
+        elif elem.text:
+            try:
+                val = float(elem.text)
+                # We skip point counts (like 1200) or very small/large flags
+                # This scales single values like <width_left>3.0</width_left>
+                if 0.01 < val < 1000 and elem.tag != 'track_length':
+                    if any(x in elem.tag.lower() for x in ['lat', 'lon', 'origin']):
+                        continue
+                    elem.text = str(val / sf)
+            except ValueError:
+                continue
+
+    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    print(f"Track scaled by {sf} succesfully.")
 
