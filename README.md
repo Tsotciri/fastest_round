@@ -1,6 +1,6 @@
-# fastest-round
+# Fastest Round
 
-**fastest-round** is a Python script that uses the **fastest-lap** vehicle dynamics library by Juan Manzanero to compute optimal lap times and generate graphs showing a car's velocity and other telemetry data.
+**fastest-round** is a Python script that uses the **fastest-lap** vehicle dynamics library by Juan Manzanero to compute optimal lap times and generate graphs showing a car's velocity and other simulated data.
 
 This repository also includes a Python wheel built for **Windows**, compiled from the **fastest-lap v0.5 precompiled binary release**.
 
