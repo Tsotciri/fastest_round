@@ -2,3 +2,4 @@ test.py
 defaults.json
 .venv
 todo.txt
+__pycache__
