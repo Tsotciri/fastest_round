@@ -3,7 +3,7 @@ test.py
 defaults.json
 todo.txt
 
-# Envirument stuff
+# Enviroment stuff
 .venv
 __pycache__/
 fastest_round.code-workspace
