@@ -110,14 +110,14 @@ while True:
             # Loading data
             try:
                 f = open(car_path, "r")
-    
+                f.close()
+
             except OSError:
                 print("File couldn't be opened, please enter a difrent path")
             else:
                 print("Car XML opened succesfully")
                 break
             
-            f.close()
 
         while True:
             print("Enter the name of the output json file")
@@ -125,31 +125,39 @@ while True:
             output_name = input(">")
 
             # Testing validity of filename
-            if ["-",".","(", ")"] in output_name:
-                print("Invalid file name, please try again")
-                continue
+            for char in ["-",".","(", ")"]:
+                if char in output_name:
+                    print("Invalid file name, please try again")
+                    continue
 
             # Checking if file exists
             try:
                 f = open(f"{output_name}.json", "r")
+                f.close()
 
             except OSError:
                 print("File name availiable")
+                run_data_path = output_name + ".json"
                 break
             else:
                 print("File already exists, please enter a difrent name")
 
-            f.close()
 
         print("Running optimal laptime simulation, this may take some tiem depending on the size of the track")
         
         try:
-            run_optimal_laptime(track, track_path, car_path, 5)
+            run_optimal_laptime(track, track_path, car_path, output_name,5)
         except:
             print("Something went wrong running the simulation")
             input("Press enter to continue...")
         else:
             print("Optimal laptime simulation complete")
+
+            # Loading the run data we just made
+            with open(run_data_path, "r") as f:
+                data = json.load(f)
+
+        print(f"> Default run data now loaded: {run_data_path}")
                 
     elif choice == 2:
     # Circuit pre-proccessor
@@ -163,14 +171,14 @@ while True:
             # Loading data
             try:
                 right_kml = open(right_kml_path, "r")
-    
+                right_kml.close()
+
             except OSError:
                 print("File couldn't be opened, please enter a difrent path")
             else:
                 print("Right KML loaded")
                 break
-        
-        right_kml.close()
+    
 
         while True:
             left_kml_path = input("Enter path for the track's left kml file: ")
@@ -178,14 +186,13 @@ while True:
             # Loading data
             try:
                 left_kml = open(left_kml_path, "r")
-    
+                left_kml.close()
+
             except OSError:
                 print("File couldn't be opened, please enter a difrent path")
             else:
                 print("Left KML loaded")
                 break
-
-        left_kml.close()
 
         while True:
             print("Enter the name of the output xml file ")
@@ -193,21 +200,21 @@ while True:
             output_name = input(">")
 
             # Testing validity of filename
-            if ["-",".","(", ")"] in output_name:
-                print("Invaluid file name, please try again")
-                continue
+            for char in ["-",".","(", ")"]:
+                if char in output_name:
+                    print("Invalid file name, please try again")
+                    continue
 
             # Checking if file exists
             try:
                 f = open(f"{output_name}.xml", "r")
+                f.close()
 
             except OSError:
                 print("File name availiable")
                 break
             else:
                 print("File already exists, please enter a difrent name")
-
-            f.close()
 
         element_num = input("Enter the number of elements: ")
 
@@ -235,6 +242,7 @@ while True:
             # Loading data
             try:
                 xml_file = open(xml_file_path, "r")
+                xml_file.close()
     
             except OSError:
                 print("File couldn't be opened, please enter a difrent path")
@@ -253,8 +261,6 @@ while True:
 
         print("Scaling XML file")
         xml_scale(xml_file_path, final_output_name, sf)
-
-        xml_file.close()
 
     elif data == None:
         print("This option needs a run data file to be loaded, please run a laptime simulation and try again")
