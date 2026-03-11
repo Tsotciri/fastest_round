@@ -7,16 +7,26 @@ import json
 import xml.etree.ElementTree as ET
 import xml.etree.ElementTree as ET
 
+def get_car_name(string: str):
+    name = ""
+    for char in string:
+        if char.isalpha():
+            name += char
+        else:
+            break
+    return name
 
-def run_optimal_laptime(track_name, track_path, vehicle_path, print_level = 5):
+def run_optimal_laptime(track_name, track_path, vehicle_path, data_output_name ,print_level = 5):
 
     # Loading track
-    track=track_name
-    fastest_lap.create_track_from_xml(track,track_path)
+    track = track_name
     s = fastest_lap.track_download_data(track,"arclength")
 
     # Loading vehicle
-    vehicle = "car"
+
+    # Getting the name of the car from its filename
+    vehicle = "car_" + get_car_name(os.path.basename(vehicle_path))
+
     fastest_lap.create_vehicle_from_xml(vehicle,vehicle_path)
 
     # Defining and setting options
@@ -27,11 +37,13 @@ def run_optimal_laptime(track_name, track_path, vehicle_path, print_level = 5):
     options += f"    <print_level> {print_level} </print_level>"
     options += "</options>"
 
+    print(f"Running simulation with vehicle: {vehicle} ({vehicle_path})")
+
     # Running t he simulation and storing the results in run
     run = fastest_lap.download_variables(*fastest_lap.optimal_laptime(vehicle, track, s, options))
 
     # Writting the results on a file
-    with open("run_data.json", "x") as f:
+    with open(f"{data_output_name}.json", "x") as f:
         json.dump(run, f, indent=2)
 
 def run_circuit_preproccessor(right_kml, left_kml, output_name, num_of_elemments = 1000, print_level = 5):
