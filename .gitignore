@@ -1,5 +1,9 @@
+# Some other stuff
 test.py
 defaults.json
-.venv
 todo.txt
-__pycache__
+
+# Envirument stuff
+.venv
+__pycache__/
+fastest_round.code-workspace
