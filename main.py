@@ -76,15 +76,16 @@ while True:
     1. Run optimal laptime simulation
     2. Run circuit pre-proccessor
     3. Show track 
-    4. Show optimal laptime graph
-    5. Show all velocities graph
-    6. Show Total velocity graph
-    7. Show true kappa graph
-    8. Show average true kappa inverted graph
-    9. Print Values
-    10. Show 2 car optimal laptime grap
-    11. Show list of data
-    12. Scale track xml
+    4. Scale track xml
+    --- run data json required for below ---
+    5. Show optimal laptime graph
+    6. Show all velocities graph
+    7. Show Total velocity graph
+    8. Show true kappa graph
+    9. Show average true kappa inverted graph
+    10. Print Values
+    11. Show 2 car optimal laptime graph
+    12. Show list of data
     """
     print(choices)
 
@@ -99,8 +100,6 @@ while True:
     
     if choice == 1:
         # Optimal laptime
-
-
 
         print("Additional data required for this option")
         print(f"NOTE: the current track will be used: {track_path}")
@@ -117,6 +116,8 @@ while True:
             else:
                 print("Car XML opened succesfully")
                 break
+            
+            f.close()
 
         while True:
             print("Enter the name of the output json file")
@@ -125,7 +126,7 @@ while True:
 
             # Testing validity of filename
             if ["-",".","(", ")"] in output_name:
-                print("Invaluid file name, please try again")
+                print("Invalid file name, please try again")
                 continue
 
             # Checking if file exists
@@ -137,6 +138,8 @@ while True:
                 break
             else:
                 print("File already exists, please enter a difrent name")
+
+            f.close()
 
         print("Running optimal laptime simulation, this may take some tiem depending on the size of the track")
         
@@ -166,6 +169,8 @@ while True:
             else:
                 print("Right KML loaded")
                 break
+        
+        right_kml.close()
 
         while True:
             left_kml_path = input("Enter path for the track's left kml file: ")
@@ -179,6 +184,8 @@ while True:
             else:
                 print("Left KML loaded")
                 break
+
+        left_kml.close()
 
         while True:
             print("Enter the name of the output xml file ")
@@ -200,28 +207,65 @@ while True:
             else:
                 print("File already exists, please enter a difrent name")
 
+            f.close()
+
         element_num = input("Enter the number of elements: ")
 
         print("Running circuit pre-proccessor, this may take some tiem depending on the size of the track")
             
         run_circuit_preproccessor(right_kml, left_kml, output_name, element_num)
-        
+
 
     elif choice == 3:
         fig =  fastest_lap.plot_track(*fastest_lap.track_coordinates(track))
         plt.plot([1],[2],linewidth=2,color="blue")
         plt.show()
 
+    elif choice == 4:
+        # Scale track xml
+
+        
+
+
+        print("Additional data required for this option")
+        
+        while True:
+            xml_file_path = input("Enter path for the track's XML file: ")
+
+            # Loading data
+            try:
+                xml_file = open(xml_file_path, "r")
+    
+            except OSError:
+                print("File couldn't be opened, please enter a difrent path")
+            else:
+                print("Track XML loaded")
+                break
+        
+        final_output_name = os.path.basename(xml_file_path).rstrip(".xml") + "_scaled" + ".xml"
+
+        while True:
+            sf = int(input("By how much do you want to scale the track: "))
+            if sf > 0:
+                break
+            else:
+                print("Invalid value, please provide a positive value")
+
+        print("Scaling XML file")
+        xml_scale(xml_file_path, final_output_name, sf)
+
+        xml_file.close()
+
     elif data == None:
         print("This option needs a run data file to be loaded, please run a laptime simulation and try again")
         os.system("pause")
-        
-    elif choice == 4:
+
+    elif choice == 5:
         fastest_lap.plot_optimal_laptime(s, data["chassis.position.x"], data["chassis.position.y"], track, "blue")
         plt.gca().invert_xaxis()
         plt.show()
 
-    elif choice == 5:
+    elif choice == 6:
     # Velocities graphs
 
         # Calculate total velocity from velocity x and y
@@ -280,7 +324,7 @@ while True:
         plt.grid()
         plt.show()
     
-    elif choice == 6:
+    elif choice == 7:
     # Total velocity graph
 
 
@@ -305,7 +349,7 @@ while True:
         plt.grid()
         plt.show()
 
-    elif choice == 7:
+    elif choice == 8:
     # Average true kappa
 
 
@@ -331,7 +375,7 @@ while True:
         plt.grid()
         plt.show()
 
-    elif choice == 8:
+    elif choice == 9:
     # Average true kappa inverted
 
 
@@ -357,7 +401,7 @@ while True:
         plt.grid()
         plt.show()
 
-    elif choice == 9:
+    elif choice == 10:
     # Showing user selected data
 
 
@@ -369,7 +413,7 @@ while True:
         for arclen in range(len(keys)):
             print(arclen,"->", data[value][arclen])
 
-    elif choice == 10:
+    elif choice == 11:
         # Optimal lap graph of 2 cars
 
 
@@ -410,21 +454,13 @@ while True:
         plt.gca().invert_xaxis()
         plt.show()
 
-
-
-    elif choice == 11:
+    elif choice == 12:
     # Print options
 
         # Print all options saved in the run json
         for i in range(len(keys)):
             print(i, ") ", keys[i], sep="")
 
-    elif choice == 12:
-    # Scale track xml
-
-        # Print all options saved in the run json
-        for i in range(len(keys)):
-            print(i, ") ", keys[i], sep="")
 
     else:
         print("Invalid choice, please try again")
