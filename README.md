@@ -1,5 +1,11 @@
-# Fastest Round
+# fastest-round
 
-fastest-round is a script that uses juanmanzanero's [fastest-lap](https://github.com/juanmanzanero/fastest-lap) library to show optimal laptime and graphs about a cars velocity and other data. This repo also has python wheel made for windows from the fastest-lap's pre-compiled binary realse 0.5v, other than that fastest-round is just a script to make using fastest-lap more convenient, all the calculations are still being done by fastest-lap.
+**fastest-round** is a Python script that uses the **fastest-lap** vehicle dynamics library by Juan Manzanero to compute optimal lap times and generate graphs showing a car's velocity and other telemetry data.
 
-NOTE: I might also add a wheel for linux if I actually succed in compiling the library.
+This repository also includes a Python wheel built for **Windows**, compiled from the **fastest-lap v0.5 precompiled binary release**.
+
+Aside from that wheel, **fastest-round** is simply a convenience script that makes interacting with fastest-lap easier. All physics calculations and simulation logic are performed by the **fastest-lap** library.
+
+## Notes
+
+I may add a Linux wheel in the future if I succeed in compiling the library for Linux.
